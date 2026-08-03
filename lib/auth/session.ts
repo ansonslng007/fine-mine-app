@@ -44,7 +44,13 @@ export async function loadAuthUser(): Promise<AuthUser | null> {
 
 /** Sign-out: clears token and cached member locally; keeps biometric prefs and credentials so Face ID / fingerprint login still works after sign-out. */
 export async function clearAuthSession(): Promise<void> {
-  await unregisterDevicePushToken();
-  await clearAuthToken();
-  await AsyncStorage.removeItem(USER_KEY);
+  try {
+    await unregisterDevicePushToken();
+  } catch {
+    // An expired token must not prevent local sign-out.
+  }
+  await Promise.all([
+    clearAuthToken(),
+    AsyncStorage.removeItem(USER_KEY),
+  ]);
 }

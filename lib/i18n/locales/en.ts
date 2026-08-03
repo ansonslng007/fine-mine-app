@@ -224,6 +224,7 @@ export const en = {
   },
   platform: {
     facebook: "Facebook",
+    threads: "Threads",
   },
   card: {
     badgeLost: "Lost",
@@ -413,7 +414,7 @@ export const en = {
     occurredAtFound: "Found on",
     locationSection: "Location",
     contactPoster: "Message poster",
-    openSourcePost: "View group post",
+    openSourcePost: "View source post",
     openSourcePostFailedTitle: "Could not open link",
     openSourcePostFailedBody:
       "Check that a browser or the Facebook app is available.",

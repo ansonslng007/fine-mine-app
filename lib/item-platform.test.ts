@@ -4,14 +4,18 @@ import {
   formatItemPlatformTag,
   formatPlatformTag,
   getEffectiveItemPlatform,
+  isExternalImport,
+  itemPlatformTagBackground,
   isFacebookImport,
   ITEM_PLATFORM_FACEBOOK,
+  ITEM_PLATFORM_THREADS_TAG_BG,
   platformLabelKey,
 } from "./item-platform";
 
 const t = (key: string) =>
   ({
     "platform.facebook": "Facebook",
+    "platform.threads": "Threads",
   })[key] ?? key;
 
 describe("item platform helpers", () => {
@@ -36,6 +40,8 @@ describe("item platform helpers", () => {
   it("returns translated tags only for known platforms", () => {
     expect(platformLabelKey("facebook")).toBe("platform.facebook");
     expect(formatPlatformTag("facebook", t)).toBe("Facebook");
+    expect(platformLabelKey("threads")).toBe("platform.threads");
+    expect(formatPlatformTag("threads", t)).toBe("Threads");
     expect(formatPlatformTag("unknown", t)).toBe(null);
   });
 
@@ -53,5 +59,15 @@ describe("item platform helpers", () => {
       }),
     ).toBe(true);
     expect(isFacebookImport({ platform: "facebook" })).toBe(false);
+  });
+
+  it("detects Threads posts as external imports", () => {
+    const item = {
+      platform: "threads",
+      sourcePostUrl: "https://www.threads.com/@example/post/123",
+    };
+    expect(formatItemPlatformTag(item, t)).toBe("Threads");
+    expect(isExternalImport(item)).toBe(true);
+    expect(itemPlatformTagBackground(item)).toBe(ITEM_PLATFORM_THREADS_TAG_BG);
   });
 });

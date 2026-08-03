@@ -17,7 +17,7 @@ import { useI18n } from "@/providers/i18n-provider";
 import type { Item } from "@/lib/api/items";
 import {
   formatItemPlatformTag,
-  ITEM_PLATFORM_TAG_BG,
+  itemPlatformTagBackground,
 } from "@/lib/item-platform";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -72,9 +72,6 @@ export function LostItemCard({ item }: Props) {
           color: c.textPrimary,
           fontSize: 11,
           fontWeight: "700",
-        },
-        badgePlatform: {
-          backgroundColor: ITEM_PLATFORM_TAG_BG,
         },
         badgePlatformText: {
           color: "#FFFFFF",
@@ -151,7 +148,12 @@ export function LostItemCard({ item }: Props) {
               </View>
             ) : null}
             {platformTag ? (
-              <View style={[styles.badge, styles.badgePlatform]}>
+              <View
+                style={[
+                  styles.badge,
+                  { backgroundColor: itemPlatformTagBackground(item) },
+                ]}
+              >
                 <Text style={styles.badgePlatformText}>{platformTag}</Text>
               </View>
             ) : null}

@@ -1,3 +1,6 @@
+import { getMe } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/client";
+import { clearAuthSession } from "@/lib/auth/session";
 import { getAuthToken } from "@/lib/auth/token-storage";
 import { useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -13,12 +16,25 @@ export function RootAuthRedirect() {
   const segments = useSegments();
   const router = useRouter();
   const splashHidden = useRef(false);
+  const validatedToken = useRef<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
     const run = async () => {
-      const token = await getAuthToken();
+      let token = await getAuthToken();
+      if (token && validatedToken.current !== token) {
+        try {
+          await getMe();
+          validatedToken.current = token;
+        } catch (error) {
+          if (error instanceof ApiError && error.status === 401) {
+            await clearAuthSession();
+            token = null;
+            validatedToken.current = null;
+          }
+        }
+      }
       if (cancelled) {
         return;
       }

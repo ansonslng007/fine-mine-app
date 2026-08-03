@@ -1,16 +1,21 @@
 /** DB `items.platform` values for externally imported posts. */
 export const ITEM_PLATFORM_FACEBOOK = "facebook" as const;
+export const ITEM_PLATFORM_THREADS = "threads" as const;
 
-/** Platform source tag background (Facebook brand blue). */
+/** External platform source tag background. */
 export const ITEM_PLATFORM_TAG_BG = "#0866FF";
+export const ITEM_PLATFORM_THREADS_TAG_BG = "#000000";
 
-export type ItemPlatform = typeof ITEM_PLATFORM_FACEBOOK;
+export type ItemPlatform =
+  | typeof ITEM_PLATFORM_FACEBOOK
+  | typeof ITEM_PLATFORM_THREADS;
 
 /** i18n key under `platform.*`, e.g. platform.facebook → "Facebook". */
 export function platformLabelKey(
   platform: string | null | undefined,
 ): string | null {
   if (platform === ITEM_PLATFORM_FACEBOOK) return "platform.facebook";
+  if (platform === ITEM_PLATFORM_THREADS) return "platform.threads";
   return null;
 }
 
@@ -55,4 +60,20 @@ export function isFacebookImport(item: {
     getEffectiveItemPlatform(item) === ITEM_PLATFORM_FACEBOOK &&
     Boolean(item.sourcePostUrl?.trim())
   );
+}
+
+export function itemPlatformTagBackground(item: {
+  platform?: string | null;
+  sourcePostUrl?: string | null;
+}): string {
+  return getEffectiveItemPlatform(item) === ITEM_PLATFORM_THREADS
+    ? ITEM_PLATFORM_THREADS_TAG_BG
+    : ITEM_PLATFORM_TAG_BG;
+}
+
+export function isExternalImport(item: {
+  platform?: string | null;
+  sourcePostUrl?: string | null;
+}): boolean {
+  return Boolean(getEffectiveItemPlatform(item) && item.sourcePostUrl?.trim());
 }

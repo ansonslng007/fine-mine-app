@@ -18,8 +18,8 @@ import { createConversation } from "@/lib/api/chat";
 import { ApiError } from "@/lib/api/client";
 import {
   formatItemPlatformTag,
-  isFacebookImport,
-  ITEM_PLATFORM_TAG_BG,
+  isExternalImport,
+  itemPlatformTagBackground,
 } from "@/lib/item-platform";
 import { useI18n } from "@/providers/i18n-provider";
 import { Image } from "expo-image";
@@ -219,7 +219,6 @@ export function ItemDetailScreen() {
           paddingHorizontal: 12,
           paddingVertical: 6,
           borderRadius: 999,
-          backgroundColor: ITEM_PLATFORM_TAG_BG,
         },
         badgePlatformText: {
           color: "#FFFFFF",
@@ -301,13 +300,13 @@ export function ItemDetailScreen() {
   const occurredAtLabel = isLost
     ? t("detail.occurredAtLost")
     : t("detail.occurredAtFound");
-  const isFbGroupImport = isFacebookImport(item);
+  const isImportedPost = isExternalImport(item);
   const isOwnPoster =
-    !isFbGroupImport &&
+    !isImportedPost &&
     poster != null &&
     authUser != null &&
     poster.id === authUser.id;
-  const canMessagePoster = !isFbGroupImport && poster != null && !isOwnPoster;
+  const canMessagePoster = !isImportedPost && poster != null && !isOwnPoster;
 
   const handleOpenSourcePost = async () => {
     if (!sourcePostUrl) return;
@@ -480,7 +479,12 @@ export function ItemDetailScreen() {
               </Text>
             </View>
             {platformTag ? (
-              <View style={styles.badgePlatform}>
+              <View
+                style={[
+                  styles.badgePlatform,
+                  { backgroundColor: itemPlatformTagBackground(item) },
+                ]}
+              >
                 <Text style={styles.badgePlatformText}>{platformTag}</Text>
               </View>
             ) : null}
@@ -545,7 +549,7 @@ export function ItemDetailScreen() {
           { paddingBottom: Math.max(insets.bottom, 14) },
         ]}
       >
-        {isFbGroupImport ? (
+        {isImportedPost ? (
           <AppButton
             label={t("detail.openSourcePost")}
             onPress={handleOpenSourcePost}
@@ -582,7 +586,7 @@ export function ItemDetailScreen() {
         ) : null}
         {!canMessagePoster &&
         !isOwnPoster &&
-        !isFbGroupImport &&
+        !isImportedPost &&
         poster == null ? (
           <ThemedText type="bodyMuted" style={styles.contactFooterHint}>
             {t("detail.contactUnavailableLegacy")}

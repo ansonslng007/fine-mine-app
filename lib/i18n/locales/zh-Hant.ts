@@ -214,6 +214,7 @@ export const zhHant = {
   },
   platform: {
     facebook: "Facebook",
+    threads: "Threads",
   },
   card: {
     badgeLost: "遺失",
@@ -396,9 +397,9 @@ export const zhHant = {
     occurredAtFound: "尋獲時間",
     locationSection: "地點",
     contactPoster: "聯絡發佈者",
-    openSourcePost: "查看社團貼文",
+    openSourcePost: "查看原帖",
     openSourcePostFailedTitle: "無法開啟連結",
-    openSourcePostFailedBody: "請確認已安裝瀏覽器或 Facebook App。",
+    openSourcePostFailedBody: "請確認裝置可以開啟原帖連結。",
     youArePoster: "這是你發布的項目。",
     editPost: "編輯",
     deletePost: "刪除",
